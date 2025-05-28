@@ -58,22 +58,22 @@ class Solution {
     /**
      * 定义动态规划方程 dp[i] = 组成金额i的最少的硬币数
      * dp[i] = max(dp[i - coins[j]] + 1, dp[i])
-     * 需要满足条件
-     * 1、i - coins[j] >= 0，即金额不超过硬币
-     * 2、跳过初始值dp[i - coins[j]]无解的情况
+     * 需要满足条件i - coins[j] >= 0，即金额不超过硬币
+     * 注意：初始值不要定义为Integer.MAX_VALUE，dp[i - coins[j]] + 1会溢出
+     * 最后比较
      */
     public int coinChange(int[] coins, int amount) {
-        int[] dp = new int[amount + 1]; // 0 ~ amount
-        Arrays.fill(dp, Integer.MAX_VALUE);
+        int[] dp = new int[amount + 1]; // dp[i] 代表组成金额i最少的硬币数
+        Arrays.fill(dp, amount + 1); // 初始化为不可能的值，因为硬币面额最小是1
         dp[0] = 0;
         for (int i = 1; i <= amount; i++) {
             for (int j = 0; j < coins.length; j++) {
-                if (i - coins[j] >= 0 && dp[i - coins[j]] != Integer.MAX_VALUE) {
+                if (i - coins[j] >= 0) {
                     dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
                 }
             }
         }
-        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
     }
 }
 // @lc code=end
