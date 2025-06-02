@@ -296,7 +296,7 @@ DFS：遍历结构，树/图
 
 转载请注明原文链接: https://writings.sh/post/knapsack#%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8C
 
-> [!NOTE]
+> [!IMPORTANT]
 >
 > 测试
 
