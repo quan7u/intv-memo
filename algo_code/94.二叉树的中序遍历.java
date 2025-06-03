@@ -69,20 +69,41 @@
  *     }
  * }
  */
+/**
+ * 左-中-右
+ */
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<>();
-        dfs(res, root);
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode cur = root;
+        while (!stack.isEmpty() || cur != null) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            res.add(cur.val);
+            cur = cur.right;
+        }
+        return res;
+    }
+}
+
+class Solution1 {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        dfs(root, res);
         return res;
     }
 
-    public void dfs(List<Integer> res, TreeNode root) {
-        if (root == null) {
+    private void dfs(TreeNode node, List<Integer> res) {
+        if (node == null) {
             return;
         }
-        dfs(res, root.left);
-        res.add(root.val);
-        dfs(res, root.right);
+        dfs(node.left, res);
+        res.add(node.val);
+        dfs(node.right, res);
     }
 }
 // @lc code=end
