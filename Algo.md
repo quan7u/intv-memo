@@ -300,9 +300,7 @@ DFS：遍历结构，树/图
 
 
 
-<img src="./Algo.assets/image-20250606215856502.png" alt="image-20250606215856502" style="zoom: 40
-
-%;" />
+<img src="./Algo.assets/image-20250606215856502.png" alt="image-20250606215856502" style="zoom: 40%;" />
 
 在另一个博客中也是如此定义：https://writings.sh/post/monotonic-stack
 
