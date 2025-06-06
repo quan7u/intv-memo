@@ -49,9 +49,59 @@
  */
 
 // @lc code=start
+/**
+ * 维护递增栈，若遇到小于栈顶p元素的x，出栈计算面积
+ * 面积分为左右部分 （pre,j,i）
+ * 右：j 到 i，不含i
+ * 左：pre 到 j，不含pre，不含j（j在右部分已经计算在内）
+ * 
+ * 注意：遍历完毕之后，栈内还可能存在元素没有处理
+ * 此时将数组长度n代入x处理，
+ * 
+ */
 class Solution {
     public int largestRectangleArea(int[] heights) {
-        
+        Deque<Integer> stack = new ArrayDeque<>();
+        int n = heights.length;
+        int res = 0;
+        for (int i = 0; i <= n; i++) {
+            int h = -1;
+            if (i != n) {
+                h = heights[i];
+            }
+            while (!stack.isEmpty() && heights[stack.peek()] > h) {
+                int j = stack.pop();
+                int right = i;
+                int left = stack.isEmpty() ? 0 : stack.peek() + 1;
+                res = Math.max(res, (right - left) * heights[j]);
+            }
+            stack.push(i);
+        }
+        return res;
+    }
+}
+
+class Solution1 {
+    public int largestRectangleArea(int[] heights) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        int n = heights.length;
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && heights[stack.peek()] > heights[i]) {
+                int j = stack.pop();
+                int right = i - j;
+                int left = (stack.isEmpty() ? j : (j - stack.peek() - 1));
+                res = Math.max(res, (left + right) * heights[j]);
+            }
+            stack.push(i);
+        }
+        while (!stack.isEmpty()) {
+            int j = stack.pop();
+            int right = n - j;
+            int left = (stack.isEmpty() ? j : (j - stack.peek() - 1));
+            res = Math.max(res, (left + right) * heights[j]);
+        }
+        return res;
     }
 }
 // @lc code=end
