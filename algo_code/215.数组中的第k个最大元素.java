@@ -46,45 +46,96 @@
  */
 
 // @lc code=start
+/**
+ * 三路快排在大量重复元素场景下性能更优
+ */
 class Solution {
-    /*
-    堆排序
-    1、建堆
-    2、遍历k-1次堆化，堆顶即第k大元素
-    */
     public int findKthLargest(int[] nums, int k) {
         int n = nums.length;
-        for (int i = n / 2 - 1; i >= 0; i--) {
-            heapify(nums, i, n);
-        } // 整个数组被堆化
-        for (int i = n - 1; i >= n - k + 1; i--) {
-            swap(nums, 0, i);
-            heapify(nums, 0, i);
-        }
-        return nums[0];
+        return quickSelect(nums, 0, n - 1, n - k);
     }
 
-    public void heapify(int[] nums, int i, int n) {
-        int largest = i;
-        int left = 2 * i + 1;
-        int right = 2 * i + 2;
-        if (left < n && nums[left] > nums[largest]) {
-            largest = left;
-        }
-        if (right < n && nums[right] > nums[largest]) {
-            largest = right;
-        }
-        if (largest != i) {
-            swap(nums, i, largest);
-            heapify(nums, largest, n);
+    private int quickSelect(int[] nums, int l, int r, int index) {
+        int[] range = partition(nums, l, r);
+        int start = range[0];
+        int end = range[1];
+
+        if (start <= index && index <= end) {
+            return nums[start];
+        } else if (start > index) {
+            return quickSelect(nums, l, start - 1, index);
+        } else {
+            return quickSelect(nums, end + 1, r, index);
         }
     }
 
-    public void swap(int[] nums, int a, int b) {
+    private int[] partition(int[] nums, int l, int r) {
+        int pivot = nums[l];
+        int i = l + 1;
+        int lt = l;
+        int gt = r;
+        while (i <= gt) {
+            if (nums[i] < pivot) {
+                swap(nums, i, lt);
+                i++;
+                lt++;
+            } else if (nums[i] > pivot) {
+                swap(nums, i, gt);
+                gt--;
+            } else {
+                i++;
+            }
+        }
+        return new int[]{lt, gt};
+    }
+
+    private void swap(int[] nums, int a, int b) {
         int t = nums[a];
         nums[a] = nums[b];
         nums[b] = t;
     }
+}
+
+class Solution1 {
+    public int findKthLargest(int[] nums, int k) {
+        int n = nums.length;
+
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            heapify(nums, n, i);
+        }
+
+        for (int i = n - 1; i > n - k; i--) {
+            swap(nums, 0, i);
+            heapify(nums, i, 0);
+        }
+
+        return nums[0];
+    }
+
+    private void heapify(int[] nums, int n, int i) {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+
+        if (left < n && nums[left] > nums[largest]) {
+            largest = left;
+        }
+
+        if (right < n && nums[right] > nums[largest]) {
+            largest = right;
+        }
+
+        if (largest != i) {
+            swap(nums, largest, i);
+            heapify(nums, n, largest);
+        }
+    }
+
+    private void swap(int[] nums, int a, int b) {
+        int t = nums[a];
+        nums[a] = nums[b];
+        nums[b] = t;
+    } 
 }
 // @lc code=end
 
